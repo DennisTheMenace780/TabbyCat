@@ -7,9 +7,16 @@ import (
 
 	"github.com/charmbracelet/bubbles/list"
 	tea "github.com/charmbracelet/bubbletea"
+	"github.com/charmbracelet/lipgloss"
 	"github.com/charmbracelet/x/exp/teatest"
+	"github.com/muesli/termenv"
 	"github.com/stretchr/testify/assert"
 )
+
+func init() {
+    // This is required for CI to pass. See https://charm.sh/blog/teatest/
+	lipgloss.SetColorProfile(termenv.Ascii)
+}
 
 func TestFullOutput(t *testing.T) {
 	model := initialModel()
@@ -32,8 +39,8 @@ func TestFullOutput(t *testing.T) {
 	})
 
 	finalView := tm.FinalModel(t).View()
-    // Want to do a contains assertion here to ignore the way output is displayed.
-    // Just care about having the right sub-string in the outputs
+	// Want to do a contains assertion here to ignore the way output is displayed.
+	// Just care about having the right sub-string in the outputs
 	expectedOutput := "checking out JOB-62131/JOB-76477/store-feature-enablement"
 	assert.Contains(t, finalView, expectedOutput)
 
