@@ -53,7 +53,6 @@ func (d itemDelegate) Render(w io.Writer, m list.Model, index int, listItem list
 type model struct {
 	list     list.Model
 	choice   string
-	cursor   int
 	quitting bool
 }
 
