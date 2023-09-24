@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"io"
+	"log"
 	"os"
 	"strings"
 
@@ -10,6 +11,8 @@ import (
 	"github.com/charmbracelet/bubbles/list"
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/lipgloss"
+	"github.com/go-git/go-git/v5"
+	"github.com/go-git/go-git/v5/plumbing"
 )
 
 const listHeight = 14
@@ -97,15 +100,38 @@ func (m model) View() string {
 	return "\n" + m.list.View()
 }
 
-func main() {
-	items := []list.Item{
-		item("JOB-62131/JOB-76475/add-location-timers-to-fms"),
-		item("JOB-62131/JOB-76477/store-feature-enablement"),
-		item("JOB-62131/JOB-77400/show-modal-dialogue-on-disablement"),
-		item("JOB-12940/JOB-21311/be-supportive"),
-		item("JOB-12940/JOB-42069/give-a-shit"),
-		item("JOB-12940/JOB-00018/be-humble"),
+func itemBuilder(branches []string) []list.Item {
+	var items []list.Item
+	for _, b := range branches {
+		items = append(items, item(b))
 	}
+    return items
+}
+
+func main() {
+	var slc []string
+	repo, err := git.PlainOpen(".")
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	branches, err := repo.Branches()
+	if err != nil {
+		log.Print(err)
+	}
+
+	myFunc := func(ref *plumbing.Reference) error {
+		trim := strings.TrimPrefix(ref.Name().String(), "refs/heads/")
+		slc = append(slc, trim)
+		return nil
+	}
+
+	err = branches.ForEach(myFunc)
+	if err != nil {
+		log.Print(err)
+	}
+
+    items := itemBuilder(slc)
 
 	const defaultWidth = 20
 
