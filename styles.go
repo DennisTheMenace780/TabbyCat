@@ -7,6 +7,7 @@ import (
 
 const ListHeight = 14
 const DefaultWidth = 20
+const TitleDescription = "Checkout branch:"
 
 var (
 	TitleStyle        = lipgloss.NewStyle().MarginLeft(2)

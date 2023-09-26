@@ -46,7 +46,7 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 func (m Model) View() string {
 	if m.choice != "" {
-		return QuitTextStyle.Render(fmt.Sprintf("checking out %s", m.choice))
+		return QuitTextStyle.Render(fmt.Sprintf("switched to branch '%s'", m.choice))
 	}
 	if m.quitting {
 		return QuitTextStyle.Render("Not hungry? That’s cool.")

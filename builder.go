@@ -47,6 +47,7 @@ func BuildItems(branches []string) []list.Item {
 
 func ListBuilder(items []list.Item) list.Model {
     l := list.New(items, ItemDelegate{}, DefaultWidth, ListHeight)
+    l.Title = TitleDescription
 	l.SetShowStatusBar(false)
 	l.SetFilteringEnabled(false)
 	l.Styles.Title = TitleStyle
