@@ -14,7 +14,7 @@ import (
 )
 
 func init() {
-    // This is required for CI to pass. See https://charm.sh/blog/teatest/
+	// This is required for CI to pass. See https://charm.sh/blog/teatest/
 	lipgloss.SetColorProfile(termenv.Ascii)
 }
 
@@ -50,14 +50,14 @@ func TestFullOutput(t *testing.T) {
 func initialModel() model {
 
 	branches := []list.Item{
-		item("JOB-62131/JOB-76475/add-location-timers-to-fms"),
-		item("JOB-62131/JOB-76477/store-feature-enablement"),
-		item("JOB-62131/JOB-77400/show-modal-dialogue-on-disablement"),
+		Item("JOB-62131/JOB-76475/add-location-timers-to-fms"),
+		Item("JOB-62131/JOB-76477/store-feature-enablement"),
+		Item("JOB-62131/JOB-77400/show-modal-dialogue-on-disablement"),
 	}
 
 	const defaultWidth = 20
 	const listHeight = 14
 
-	l := list.New(branches, itemDelegate{}, defaultWidth, listHeight)
+	l := list.New(branches, ItemDelegate{}, defaultWidth, listHeight)
 	return model{list: l}
 }
