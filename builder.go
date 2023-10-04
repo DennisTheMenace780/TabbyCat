@@ -33,7 +33,6 @@ func (d ItemDelegate) Render(w io.Writer, m list.Model, index int, listItem list
 			return SelectedItemStyle.Render("> " + strings.Join(s, " "))
 		}
 	}
-
 	fmt.Fprint(w, fn(str))
 }
 
@@ -46,15 +45,15 @@ func BuildItems(branches []string) []list.Item {
 }
 
 func ListBuilder(items []list.Item) list.Model {
-    l := list.New(items, ItemDelegate{}, DefaultWidth, ListHeight)
-    l.Title = TitleDescription
+	l := list.New(items, ItemDelegate{}, DefaultWidth, ListHeight)
+	l.Title = TitleDescription
 	l.SetShowStatusBar(false)
 	l.SetFilteringEnabled(false)
 	l.Styles.Title = TitleStyle
 	l.Styles.PaginationStyle = PaginationStyle
 	l.Styles.HelpStyle = HelpStyle
 	l.KeyMap = defaultKeyMap()
-    return l
+	return l
 }
 
 func defaultKeyMap() list.KeyMap {

@@ -2,13 +2,17 @@ package main
 
 import (
 	"fmt"
+	"log"
 
 	"github.com/charmbracelet/bubbles/list"
 	tea "github.com/charmbracelet/bubbletea"
+	"github.com/go-git/go-git/v5"
+	"github.com/go-git/go-git/v5/plumbing"
 )
 
 type Model struct {
 	list     list.Model
+	repo     *git.Repository
 	choice   string
 	quitting bool
 }
@@ -18,6 +22,11 @@ func (m Model) Init() tea.Cmd {
 }
 
 func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
+	w, err := m.repo.Worktree()
+	if err != nil {
+		log.Print(err)
+	}
+
 	switch msg := msg.(type) {
 	case tea.WindowSizeMsg:
 		m.list.SetWidth(msg.Width)
@@ -33,6 +42,23 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			i, ok := m.list.SelectedItem().(Item)
 			if ok {
 				m.choice = string(i)
+
+				refName := plumbing.NewBranchReferenceName(m.choice)
+				opts := git.CheckoutOptions{
+					Branch: refName,
+					Create: false,
+					Force:  false,
+                    Keep: false,
+				}
+                err := opts.Validate()
+                if err != nil {
+                    fmt.Println(err)
+                }
+
+				e := w.Checkout(&opts)
+				if e != nil {
+					log.Print(e)
+				}
 			}
 			return m, tea.Quit
 		}
