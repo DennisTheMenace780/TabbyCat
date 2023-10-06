@@ -2,6 +2,8 @@ package main
 
 import (
 	"bytes"
+	"io"
+	"log"
 	"testing"
 	"time"
 
@@ -9,8 +11,8 @@ import (
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/lipgloss"
 	"github.com/charmbracelet/x/exp/teatest"
+	"github.com/go-git/go-git/v5"
 	"github.com/muesli/termenv"
-	"github.com/stretchr/testify/assert"
 )
 
 func init() {
@@ -18,36 +20,61 @@ func init() {
 	lipgloss.SetColorProfile(termenv.Ascii)
 }
 
-func TestFullOutput(t *testing.T) {
+func TestOutput(t *testing.T) {
+
 	model := initialModel()
-	tm := teatest.NewTestModel(t, model, teatest.WithInitialTermSize(300, 100))
 
-	teatest.WaitFor(t, tm.Output(),
-		func(bts []byte) bool {
-			return bytes.Contains(bts, []byte("1. JOB-62131/JOB-76475/add-location-timers-to-fms"))
-		},
-	)
+	t.Run("Moving down once and selecting a branch", func(t *testing.T) {
+		tm := teatest.NewTestModel(t, model, teatest.WithInitialTermSize(300, 100))
 
-	tm.Send(tea.KeyMsg{
-		Type:  tea.KeyRunes,
-		Runes: []rune("j"),
+        // Assert that the program, at some point, has the following byte string ... make a helper function?
+		teatest.WaitFor(t, tm.Output(),
+			func(bts []byte) bool {
+				return bytes.Contains(
+					bts,
+					[]byte("1. JOB-62131/JOB-76475/add-location-timers-to-fms"),
+				)
+			},
+		)
+
+		moveDownAndSelectBranch(tm, 1)
+
+		tm.WaitFinished(t, teatest.WithFinalTimeout(time.Second))
+
+		out, err := io.ReadAll(tm.FinalOutput(t))
+		if err != nil {
+			t.Error(err)
+		}
+		teatest.RequireEqualOutput(t, out)
+
 	})
 
-	tm.Send(tea.KeyMsg{
-		Type:  tea.KeyRunes,
-		Runes: []rune("enter"),
+	t.Run("Moving down twice and selecting a branch", func(t *testing.T) {
+		tm := teatest.NewTestModel(t, model, teatest.WithInitialTermSize(300, 100))
+
+		teatest.WaitFor(t, tm.Output(),
+			func(bts []byte) bool {
+				return bytes.Contains(
+					bts,
+					[]byte("1. JOB-62131/JOB-76475/add-location-timers-to-fms"),
+				)
+			},
+		)
+
+		moveDownAndSelectBranch(tm, 2)
+
+		tm.WaitFinished(t, teatest.WithFinalTimeout(time.Second))
+
+		out, err := io.ReadAll(tm.FinalOutput(t))
+		if err != nil {
+			t.Error(err)
+		}
+		teatest.RequireEqualOutput(t, out)
+
 	})
-
-	finalView := tm.FinalModel(t).View()
-	// Want to do a contains assertion here to ignore the way output is displayed.
-	// Just care about having the right sub-string in the outputs
-	expectedOutput := "checking out JOB-62131/JOB-76477/store-feature-enablement"
-	assert.Contains(t, finalView, expectedOutput)
-
-	tm.WaitFinished(t, teatest.WithFinalTimeout(time.Second))
 }
 
-func initialModel() model {
+func initialModel() Model {
 
 	branches := []list.Item{
 		Item("JOB-62131/JOB-76475/add-location-timers-to-fms"),
@@ -55,9 +82,26 @@ func initialModel() model {
 		Item("JOB-62131/JOB-77400/show-modal-dialogue-on-disablement"),
 	}
 
-	const defaultWidth = 20
-	const listHeight = 14
+	repo, err := git.PlainOpen(".")
+	if err != nil {
+		log.Fatal(err)
+	}
 
-	l := list.New(branches, ItemDelegate{}, defaultWidth, listHeight)
-	return model{list: l}
+	l := list.New(branches, ItemDelegate{}, DefaultWidth, ListHeight)
+	return Model{list: l, repo: repo}
+}
+
+func moveDownAndSelectBranch(tm *teatest.TestModel, down int) {
+
+	for i := 0; i < down; i++ {
+		tm.Send(tea.KeyMsg{
+			Type:  tea.KeyRunes,
+			Runes: []rune("j"),
+		})
+	}
+
+	tm.Send(tea.KeyMsg{
+		Type:  tea.KeyRunes,
+		Runes: []rune("enter"),
+	})
 }
