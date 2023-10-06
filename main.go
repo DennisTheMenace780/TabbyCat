@@ -26,7 +26,7 @@ func main() {
 
 	status, err := w.Status()
 	if err != nil {
-		log.Print(nil)
+		log.Print(err)
 	}
 
 	var stylez = lipgloss.NewStyle().PaddingLeft(8).Foreground(lipgloss.Color("213"))
