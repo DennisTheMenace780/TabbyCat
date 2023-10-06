@@ -5,7 +5,6 @@ import (
 	"log"
 
 	tea "github.com/charmbracelet/bubbletea"
-	"github.com/charmbracelet/lipgloss"
 	"github.com/go-git/go-git/v5"
 )
 
@@ -29,14 +28,12 @@ func main() {
 		log.Print(err)
 	}
 
-	var stylez = lipgloss.NewStyle().PaddingLeft(8).Foreground(lipgloss.Color("213"))
-
 	if !status.IsClean() {
 		fmt.Println(
 			"error: Your local changes to the following files would be overwritten by checkout:",
 		)
 		for k := range status {
-			fmt.Println(stylez.Render(k))
+			fmt.Println(ModifiedFiles.Render(k))
 		}
 		fmt.Println("Please commit your changes or stash them before you switch branches.")
 		fmt.Println("Aborting")
@@ -45,4 +42,15 @@ func main() {
 			log.Fatal(err)
 		}
 	}
+}
+
+func raiseError(status git.Status) {
+	fmt.Println(
+		"error: Your local changes to the following files would be overwritten by checkout:",
+	)
+	for k := range status {
+		fmt.Println(ModifiedFiles.Render(k))
+	}
+	fmt.Println("Please commit your changes or stash them before you switch branches.")
+	fmt.Println("Aborting")
 }
