@@ -57,6 +57,7 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 				e := w.Checkout(&opts)
 				if e != nil {
+                    log.Print("Checkout has err")
 					log.Print(e)
 				}
 			}
