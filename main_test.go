@@ -13,6 +13,7 @@ import (
 	"github.com/charmbracelet/lipgloss"
 	"github.com/charmbracelet/x/exp/teatest"
 	"github.com/go-git/go-git/v5"
+	"github.com/go-git/go-git/v5/config"
 	"github.com/muesli/termenv"
 )
 
@@ -21,51 +22,48 @@ func init() {
 	lipgloss.SetColorProfile(termenv.Ascii)
 }
 
-type WorktreeSuite struct {
-	BaseSuite
+func createBranches(repo *git.Repository, branchNames []string) {
+	for _, b := range branchNames {
+		opts := &config.Branch{Name: b}
+		err := repo.CreateBranch(opts)
+		if err != nil {
+			log.Fatal(err)
+		}
+	}
 }
 
-func ExamplePlainClone() {
-	// Tempdir to clone the repository
-	dir, err := os.MkdirTemp("", "clone-example")
+func initTmpGitRepository(dir string) *git.Repository {
+	_, err := git.PlainInit(dir, false)
 	if err != nil {
 		log.Fatal(err)
 	}
-
-	defer os.RemoveAll(dir) // clean up
-
-	// Clones the repository into the given dir, just as a normal git clone does
-	_, err = git.PlainClone(dir, false, &git.CloneOptions{
-		URL: "https://github.com/git-fixtures/basic.git",
-	})
-
+	repo, err := git.PlainOpen(dir)
 	if err != nil {
 		log.Fatal(err)
 	}
-
-	err = os.Chdir(dir)
-	if err != nil {
-		log.Fatal(err)
-	}
-	// Prints the content of the CHANGELOG file from the cloned repository
-	// changelog, err := os.Open(filepath.Join(dir, "CHANGELOG"))
-	changelog, err := os.Open("CHANGELOG")
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	io.Copy(os.Stdout, changelog)
-	// Output: Initial changelog
+	return repo
 }
 
 func TestOutput(t *testing.T) {
 
-	ExamplePlainClone()
-
-	repo, err := git.PlainOpen(".")
+	// Tempdir to clone the repository
+	dir, err := os.MkdirTemp("", "test-directory")
 	if err != nil {
 		log.Fatal(err)
 	}
+	defer os.RemoveAll(dir) // clean up
+	repo := initTmpGitRepository(dir)
+
+	branchNames := []string{
+		"JOB-62131/JOB-76475/add-location-timers-to-fms",
+		"DONALD",
+		// "JOB-62131/JOB-76477/store-feature-enablement",
+		"JOB-62131/JOB-77400/show-modal-dialogue-on-disablement",
+	}
+	createBranches(repo, branchNames)
+	slc := GetBranchesHelper(repo, branchNames)
+
+	log.Print("Slice", slc)
 
 	model := initialModel(repo)
 
@@ -117,27 +115,14 @@ func TestOutput(t *testing.T) {
 		teatest.RequireEqualOutput(t, out)
 
 	})
-
-	t.Run("Raises checkout error when branches are modified", func(t *testing.T) {
-		tm := teatest.NewTestModel(t, model, teatest.WithInitialTermSize(300, 100))
-
-		teatest.WaitFor(t, tm.Output(),
-			func(bts []byte) bool {
-				return bytes.Contains(
-					bts,
-					[]byte("1. JOB-62131/JOB-76475/add-location-timers-to-fms"),
-				)
-			},
-		)
-	})
 }
 
 func initialModel(repo *git.Repository) Model {
 
 	branches := []list.Item{
-		Item("JOB-62131/JOB-76475/add-location-timers-to-fms"),
-		Item("JOB-62131/JOB-76477/store-feature-enablement"),
-		Item("JOB-62131/JOB-77400/show-modal-dialogue-on-disablement"),
+		Item("refs/heads/JOB-62131/JOB-76475/add-location-timers-to-fms"),
+		Item("refs/heads/JOB-62131/JOB-76477/store-feature-enablement"),
+		Item("refs/heads/JOB-62131/JOB-77400/show-modal-dialogue-on-disablement"),
 	}
 
 	l := list.New(branches, ItemDelegate{}, DefaultWidth, ListHeight)

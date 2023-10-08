@@ -44,21 +44,17 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				m.choice = string(i)
 
 				refName := plumbing.NewBranchReferenceName(m.choice)
+                fmt.Println("RefName: ", refName)
 				opts := git.CheckoutOptions{
 					Branch: refName,
 					Create: false,
 					Force:  false,
                     Keep: false,
 				}
-                err := opts.Validate()
-                if err != nil {
-                    fmt.Println(err)
-                }
 
 				e := w.Checkout(&opts)
 				if e != nil {
-                    log.Print("Checkout has err")
-					log.Print(e)
+                    log.Print("Checkout error: ", e)
 				}
 			}
 			return m, tea.Quit

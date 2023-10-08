@@ -29,14 +29,7 @@ func main() {
 	}
 
 	if !status.IsClean() {
-		fmt.Println(
-			"error: Your local changes to the following files would be overwritten by checkout:",
-		)
-		for k := range status {
-			fmt.Println(ModifiedFiles.Render(k))
-		}
-		fmt.Println("Please commit your changes or stash them before you switch branches.")
-		fmt.Println("Aborting")
+        raiseError(status)
 	} else {
 		if _, err := tea.NewProgram(Model{list: l, repo: repo}).Run(); err != nil {
 			log.Fatal(err)

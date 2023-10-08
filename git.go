@@ -34,3 +34,18 @@ func GetBranches() []string {
 
 	return branches
 }
+
+// An alternative to fetching branches in the tests
+func GetBranchesHelper(r *git.Repository, branchNames []string) []string {
+	var branches []string
+
+	for _, b := range branchNames {
+		b, err := r.Branch(b)
+		if err != nil {
+			log.Print("Error", err)
+		}
+		branches = append(branches, b.Name)
+	}
+
+	return branches
+}
