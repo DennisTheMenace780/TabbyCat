@@ -95,42 +95,9 @@ func (s *BaseSuite) NewRepositoryWithEmptyWorktree(f *fixtures.Fixture) *git.Rep
 
 }
 
-// func (s *BaseSuite) NewRepositoryFromPackfile(f *fixtures.Fixture) *git.Repository {
-// 	h := f.PackfileHash
-// 	if r, ok := s.cache[h]; ok {
-// 		return r
-// 	}
-//
-// 	storer := memory.NewStorage()
-// 	p := f.Packfile()
-// 	defer func() { _ = p.Close() }()
-//
-// 	if err := packfile.UpdateObjectStorage(storer, p); err != nil {
-// 		panic(err)
-// 	}
-//
-// 	err := storer.SetReference(plumbing.NewHashReference(plumbing.HEAD, plumbing.NewHash(f.Head)))
-// 	if err != nil {
-// 		panic(err)
-// 	}
-//
-// 	r, err := git.Open(storer, memfs.New())
-// 	if err != nil {
-// 		panic(err)
-// 	}
-//
-// 	s.cache[h] = r
-// 	return r
-// }
-
-// func (s *BaseSuite) GetBasicLocalRepositoryURL() string {
-// 	fixture := fixtures.Basic().One()
-// 	return s.GetLocalRepositoryURL(fixture)
-// }
-//
-// func (s *BaseSuite) GetLocalRepositoryURL(f *fixtures.Fixture) string {
-// 	return f.DotGit().Root()
-// }
+func (s *BaseSuite) GetLocalRepositoryURL(f *fixtures.Fixture) string {
+	return f.DotGit().Root()
+}
 
 func (s *BaseSuite) TemporalDir() (path string, clean func()) {
 	fs := osfs.New(os.TempDir())
@@ -204,14 +171,6 @@ var countLinesTests = [...]struct {
 	{"a\n\n\nb\n", 4},
 	{"first line\n\tsecond line\nthird line\n", 3},
 }
-
-// Don't think I need this
-// func (s *SuiteCommon) TestCountLines(c *C) {
-// 	for i, t := range countLinesTests {
-// 		o := countLines(t.i)
-// 		c.Assert(o, Equals, t.e, Commentf("subtest %d, input=%q", i, t.i))
-// 	}
-// }
 
 func AssertReferences(c *C, r *git.Repository, expected map[string]string) {
 	for name, target := range expected {

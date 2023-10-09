@@ -44,7 +44,6 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				m.choice = string(i)
 
 				refName := plumbing.NewBranchReferenceName(m.choice)
-                fmt.Println("RefName: ", refName)
 				opts := git.CheckoutOptions{
 					Branch: refName,
 					Create: false,
