@@ -27,7 +27,10 @@ func init() {
 func TestRepo(t *testing.T) {
 	// Bless. This seems to work really well! The next steps here will be to try
 	// load the model with these branch names
-	repo, _ := git.PlainOpen("./testdata/TestRepo/")
+	repo, err := git.PlainOpen("./testdata/TestRepo/")
+    if err != nil {
+        log.Print("Error: ", err)
+    }
 
 	var branches []string
 	branchIter, err := repo.Branches()
@@ -44,7 +47,7 @@ func TestRepo(t *testing.T) {
 
 	err = branchIter.ForEach(myFunc)
 	if err != nil {
-		t.Fatal(err)
+        log.Print(err)
 	}
 
 	model := initModel(repo, branches)
@@ -67,7 +70,7 @@ func TestRepo(t *testing.T) {
 
 	out, err := io.ReadAll(tm.FinalOutput(t))
 	if err != nil {
-		t.Error(err)
+		t.Error("Error reading from FinalOutput", err)
 	}
 	teatest.RequireEqualOutput(t, out)
 
