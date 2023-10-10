@@ -7,17 +7,11 @@ require (
 	github.com/charmbracelet/bubbletea v0.24.2
 	github.com/charmbracelet/lipgloss v0.7.1
 	github.com/charmbracelet/x/exp/teatest v0.0.0-20230904163802-ca705a396e0f
-	github.com/go-git/go-billy/v5 v5.5.0
-	github.com/go-git/go-git-fixtures/v4 v4.3.2-0.20230305113008-0c11038e723f
 	github.com/go-git/go-git/v5 v5.9.0
 	github.com/muesli/termenv v0.15.1
-	gopkg.in/check.v1 v1.0.0-20201130134442-10cb98267c6c
 )
 
-require (
-	github.com/src-d/gcfg v1.4.0 // indirect
-	gopkg.in/src-d/go-git.v4 v4.13.1 // indirect
-)
+require github.com/go-git/go-billy/v5 v5.5.0 // indirect
 
 require (
 	dario.cat/mergo v1.0.0 // indirect
@@ -32,12 +26,9 @@ require (
 	github.com/cyphar/filepath-securejoin v0.2.4 // indirect
 	github.com/emirpasic/gods v1.18.1 // indirect
 	github.com/go-git/gcfg v1.5.1-0.20230307220236-3a3c6141e376 // indirect
-	github.com/go-git/go-git v4.7.0+incompatible
 	github.com/golang/groupcache v0.0.0-20210331224755-41bb18bfe9da // indirect
 	github.com/jbenet/go-context v0.0.0-20150711004518-d14ea06fba99 // indirect
 	github.com/kevinburke/ssh_config v1.2.0 // indirect
-	github.com/kr/pretty v0.3.1 // indirect
-	github.com/kr/text v0.2.0 // indirect
 	github.com/lucasb-eyer/go-colorful v1.2.0 // indirect
 	github.com/mattn/go-isatty v0.0.18 // indirect
 	github.com/mattn/go-localereader v0.0.1 // indirect
@@ -47,7 +38,6 @@ require (
 	github.com/muesli/reflow v0.3.0 // indirect
 	github.com/pjbgf/sha1cd v0.3.0 // indirect
 	github.com/rivo/uniseg v0.2.0 // indirect
-	github.com/rogpeppe/go-internal v1.11.0 // indirect
 	github.com/sahilm/fuzzy v0.1.0 // indirect
 	github.com/sergi/go-diff v1.1.0 // indirect
 	github.com/skeema/knownhosts v1.2.0 // indirect

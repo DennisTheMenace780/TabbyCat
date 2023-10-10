@@ -2,7 +2,6 @@ package main
 
 import (
 	"bytes"
-	"fmt"
 	"io"
 	"log"
 	"os"
@@ -39,14 +38,15 @@ func TestRepo(t *testing.T) {
 
 	myFunc := func(ref *plumbing.Reference) error {
 		trim := strings.TrimPrefix(ref.Name().String(), "refs/heads/")
-		fmt.Println(trim)
 		branches = append(branches, trim)
 		return nil
 	}
 
-	branchIter.ForEach(myFunc)
+	err = branchIter.ForEach(myFunc)
+	if err != nil {
+		t.Fatal(err)
+	}
 
-	fmt.Println(branches)
 	model := initModel(repo, branches)
 
 	tm := teatest.NewTestModel(t, model, teatest.WithInitialTermSize(300, 100))
