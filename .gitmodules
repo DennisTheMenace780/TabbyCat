@@ -1,3 +1,4 @@
 [submodule "testdata/TestRepo"]
 	path = testdata/TestRepo
-	url = ./testdata/TestRepo
+	url = https://github.com/DennisTheMenace780/TabbyCat/blob/master/testdata/TestRepo.git
+
