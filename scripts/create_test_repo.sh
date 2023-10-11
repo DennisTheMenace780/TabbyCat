@@ -18,8 +18,8 @@ echo "hello world" > file.txt
 # Optionally, you can add and commit the file to the Git repository:
 git add file.txt && git commit -m "Inital Commit"
 
-git checkout -b 'branch-1'
-git checkout -b 'branch-2'
-git branch
-git checkout -b 'branch-3'
-git branch
+count=1
+while [ $count -lt 4 ]; do
+    git checkout -b "branch-$count"
+    count=$((count + 1))
+done
