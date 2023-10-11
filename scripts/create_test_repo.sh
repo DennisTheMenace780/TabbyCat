@@ -9,6 +9,9 @@ cd testdata/TestRepo || exit
 # Step 3: Initialize a Git repository
 git init
 
+git config --global user.email "you@example.com"
+git config --global user.name "Your Name"
+
 # Step 4: Create a file called file.txt with "hello world" in it
 echo "hello world" > file.txt
 
