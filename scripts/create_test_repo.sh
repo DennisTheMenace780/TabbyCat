@@ -18,5 +18,4 @@ git commit -m "Initial commit"
 git checkout -b 'branch-1'
 git checkout -b 'branch-2'
 git checkout -b 'branch-3'
-git checkout master
 git branch

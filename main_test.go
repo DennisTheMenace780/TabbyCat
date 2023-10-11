@@ -73,7 +73,6 @@ func TestRepo(t *testing.T) {
 		t.Error("Error reading from FinalOutput", err)
 	}
 	teatest.RequireEqualOutput(t, out)
-
 }
 
 func TestOutput(t *testing.T) {
