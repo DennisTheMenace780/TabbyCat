@@ -12,6 +12,10 @@ jobs:
         with:
           go-version: '1.21.x'
 
+      - name: Print contents
+        run: ls -la testdata
+        run: ls -la testdata/TestRepo
+
       - name: Init and update submodules
         run: git submodule update --init --recursive
 
