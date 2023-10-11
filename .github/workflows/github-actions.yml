@@ -12,11 +12,11 @@ jobs:
         with:
           go-version: '1.21.x'
 
-      - name: Print contents
-        run: ls -la testdata/TestRepo
+      - name: Init testdata/TestRepo repository
+        run: ./scripts/create_test_repo.sh
 
-      - name: Init and update submodules
-        run: git submodule update --init --recursive
+      - name: Check if repo was created
+        run: ls -la testdata/TestRepo
 
       - name: Build Step
         run: go build -v ./...
