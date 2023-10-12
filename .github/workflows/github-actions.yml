@@ -13,7 +13,7 @@ jobs:
           go-version: '1.21.x'
 
       - name: Init testdata/TestRepo repository
-        run: ./scripts/create_test_repo.sh
+        run: ./scripts/ci/create_test_repo.sh
 
       - name: Check if repo was created
         run: ls -la testdata/TestRepo

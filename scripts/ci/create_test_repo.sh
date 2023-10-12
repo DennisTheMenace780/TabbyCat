@@ -16,7 +16,7 @@ git config --global user.name "Your Name"
 echo "hello world" > file.txt
 
 # Optionally, you can add and commit the file to the Git repository:
-git add file.txt && git commit -m "Inital Commit"
+git add file.txt && git commit --no-verify -m "Inital Commit"
 
 count=1
 while [ $count -lt 4 ]; do
